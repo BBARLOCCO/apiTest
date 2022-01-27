@@ -8,4 +8,4 @@ deploy:
   skip_cleanup: true
   provider: heroku
   api_key: $HEROKU_TOKEN
-  app: "crm-api-test"
+  app: "brunos-crm-api-test"
