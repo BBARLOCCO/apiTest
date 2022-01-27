@@ -20,6 +20,13 @@
  - Run `mvn spring-boot:run`, application will start listening to 8080 port.
  - You can also run it from your prefered IDE.
 
+## Use Docker! 
+
+ - Run  `./mvn package` for .jar creation
+ - Run `docker build ./ -t apitest` for docker image creation (tag it as you prefer)
+ - Start the server: `docker run -p 8080:8080 apitest` 
+
+
 
 ## Initial DATA
 

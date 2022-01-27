@@ -1,0 +1,11 @@
+language: java
+jdk:
+  - openjdk8
+before_install:
+ - chmod +x mvnw
+
+deploy:
+  skip_cleanup: true
+  provider: heroku
+  api_key: $HEROKU_TOKEN
+  app: "crm-api-test"
