@@ -18,6 +18,7 @@ import java.util.UUID;
 @Entity
 @NamedQuery(name="Customer.findAll", query="SELECT c FROM Customer c")
 public class Customer implements Serializable {
+
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -41,15 +42,11 @@ public class Customer implements Serializable {
 	@Column(name="updated_at", updatable = false)
 	private Timestamp updatedAt;
 
-	//bi-directional many-to-one association to Account
-	@ManyToOne
-	@JoinColumn(name="created_by", updatable = false)
-	private Account account1;
+	@Column(name="created_by", updatable = false)
+	private String createdBy;
 
-	//bi-directional many-to-one association to Account
-	@ManyToOne
-	@JoinColumn(name="updated_by")
-	private Account account2;
+	@Column(name="updated_by")
+	private String updatedBy;
 
 	public Customer() {
 	}
@@ -101,21 +98,21 @@ public class Customer implements Serializable {
 	public void setUpdatedAt(Timestamp updatedAt) {
 		this.updatedAt = updatedAt;
 	}
-
-	public Account getAccount1() {
-		return this.account1;
+	
+	public String getCreatedBy() {
+		return createdBy;
 	}
 
-	public void setAccount1(Account account1) {
-		this.account1 = account1;
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
 	}
 
-	public Account getAccount2() {
-		return this.account2;
+	public String getUpdatedBy() {
+		return updatedBy;
 	}
 
-	public void setAccount2(Account account2) {
-		this.account2 = account2;
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
 	}
 
 }
