@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.crm.apiTest.dto.Auth0usersResponse;
 import com.crm.apiTest.dto.EditUserRequest;
 import com.crm.apiTest.dto.NewUserRequest;
 import com.crm.apiTest.dto.PermissionsRequest;
@@ -26,6 +27,7 @@ import com.crm.apiTest.service.authentication.AuthenticationService;
 import com.crm.apiTest.service.authentication.exception.DuplicateUserException;
 import com.crm.apiTest.service.authentication.exception.UserNotFoundException;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 @RestController
 @RequestMapping(value = "api/v1/users", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -40,7 +42,7 @@ public class AccountController {
 	
 	@GetMapping
 	@PreAuthorize("hasAuthority('read:users')")
-	public ResponseEntity<String> getUsers(@RequestParam("page") Optional<Integer> page){
+	public ResponseEntity<Auth0usersResponse> getUsers(@RequestParam("page") Optional<Integer> page) throws JsonMappingException, JsonProcessingException{
 		return ResponseEntity.ok(authService.getUsers(page).getBody());
 	}
 	

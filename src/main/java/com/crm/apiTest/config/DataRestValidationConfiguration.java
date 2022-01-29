@@ -10,7 +10,7 @@ import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 @Configuration
-public class MySpringDataRestValidationConfiguration implements RepositoryRestConfigurer {
+public class DataRestValidationConfiguration implements RepositoryRestConfigurer {
 
     @Bean
     @Primary

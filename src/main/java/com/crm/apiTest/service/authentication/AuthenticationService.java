@@ -10,11 +10,12 @@ import com.crm.apiTest.dto.EditUserRequest;
 import com.crm.apiTest.dto.NewUserRequest;
 import com.crm.apiTest.dto.PermissionsRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 public interface AuthenticationService {		
 		
 		
-		public ResponseEntity<String> getUsers(Optional<Integer> page);
+		public ResponseEntity<Auth0usersResponse> getUsers(Optional<Integer> page) throws JsonMappingException, JsonProcessingException;
 		
 		public ResponseEntity<Auth0usersResponse> findUserByEmail(String email);
 		

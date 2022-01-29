@@ -32,7 +32,9 @@ import com.crm.apiTest.service.authentication.UserPasswordLogin;
 import com.crm.apiTest.service.authentication.exception.DuplicateUserException;
 import com.crm.apiTest.service.authentication.exception.UserNotFoundException;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
 
 
 @Service
@@ -65,14 +67,22 @@ public class Auth0Service implements AuthenticationService{
 	
 	
 	
-	public ResponseEntity<String> getUsers(Optional<Integer> page) {
+	public ResponseEntity<Auth0usersResponse> getUsers(Optional<Integer> page) throws JsonMappingException, JsonProcessingException {
 		
 		StringBuilder url = new StringBuilder("https://")
 				.append(domain)
 				.append("/api/v2/users?per_page=50&include_totals=true&page=")
 				.append(page.orElse(0));
 
-		return apiExchange( url.toString(), null, HttpMethod.GET);
+		HttpEntity<String> entity = getEntityWithHeaders(null);
+				
+		ResponseEntity<Auth0usersResponse> responseEntity = restTemplate.exchange(
+				url.toString(), 
+				HttpMethod.GET, 
+			    entity, 
+			    new ParameterizedTypeReference<Auth0usersResponse>() {
+			    });
+		return responseEntity;
 	}
 	
 	private ResponseEntity<String> apiExchange(String url, String body, HttpMethod method){

@@ -3,6 +3,8 @@ package com.crm.apiTest.dto;
 import java.util.List;
 import java.util.Map;
 
+import com.crm.apiTest.service.authentication.auth0.Auth0User;
+
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
@@ -14,7 +16,7 @@ public class Auth0usersResponse {
 	Integer limit;
 	Integer length;
 	Integer total;
-	List<Map<String, Object>> users;
+	List<Auth0User> users;
 	
 	public Integer getStart() {
 		return start;
@@ -40,10 +42,10 @@ public class Auth0usersResponse {
 	public void setTotal(Integer total) {
 		this.total = total;
 	}
-	public List<Map<String, Object>> getUsers() {
+	public List<Auth0User> getUsers() {
 		return users;
 	}
-	public void setUsers(List<Map<String, Object>> users) {
+	public void setUsers(List<Auth0User> users) {
 		this.users = users;
 	}
 	

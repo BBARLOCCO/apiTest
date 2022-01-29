@@ -16,5 +16,12 @@ public class ExceptionAdviceConfiguration {
     public String noResultExceptionHandler(NoResultException e) {
         return e.getMessage();
     }
+    
+    @ResponseBody
+    @ExceptionHandler(NumberFormatException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String formatExceptionHandler(NumberFormatException e) {
+        return e.getMessage();
+    }
 
 }
