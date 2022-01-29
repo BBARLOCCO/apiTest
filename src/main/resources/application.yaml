@@ -1,9 +1,10 @@
 auth0:
   audience: ${auth0Audience}
   domain: ${auth0Domain}
+  connection: ${auth0Connection}
   token: ${auth0ManagementToken}
   client-id: ${auth0ClientId}
-  client-secret: ${auth0ClientSecret'}
+  client-secret: ${auth0ClientSecret}
 spring:
   data:
     rest:

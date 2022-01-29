@@ -1,6 +1,10 @@
-package com.crm.apiTest.service;
+package com.crm.apiTest.service.authentication.auth0;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -22,14 +26,17 @@ import org.springframework.web.client.RestTemplate;
 import com.crm.apiTest.dto.Auth0usersResponse;
 import com.crm.apiTest.dto.EditUserRequest;
 import com.crm.apiTest.dto.NewUserRequest;
+import com.crm.apiTest.dto.PermissionsRequest;
+import com.crm.apiTest.service.authentication.AuthenticationService;
 import com.crm.apiTest.service.authentication.UserPasswordLogin;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.crm.apiTest.service.authentication.exception.DuplicateUserException;
+import com.crm.apiTest.service.authentication.exception.UserNotFoundException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 @Service
-public class Auth0Service {
+public class Auth0Service implements AuthenticationService{
 	
 	@Value("${auth0.token}")
 	String auth0token;
@@ -37,15 +44,24 @@ public class Auth0Service {
 	@Value("${auth0.domain}")
 	String domain;
 	
-	@Value("${auth0.client_id}")
+	@Value("${auth0.audience}")
+	String audience;
+	
+	@Value("${auth0.connection}")
+	String connection;
+	
+	@Value("${auth0.client-id}")
 	String clientId;
 	
-	@Value("${auth0.client_secret}")
+	@Value("${auth0.client-secret}")
 	String clientSecret;
 	
 	
 	@Autowired
 	private RestTemplate restTemplate;
+	
+	@Autowired
+	private ObjectMapper objectMapper;
 	
 	
 	
@@ -55,12 +71,17 @@ public class Auth0Service {
 				.append(domain)
 				.append("/api/v2/users?per_page=50&include_totals=true&page=")
 				.append(page.orElse(0));
-		
-		HttpEntity<String> entity = getEntityWithHeaders("");
 
+		return apiExchange( url.toString(), null, HttpMethod.GET);
+	}
+	
+	private ResponseEntity<String> apiExchange(String url, String body, HttpMethod method){
+		
+		HttpEntity<String> entity = getEntityWithHeaders(body);
+		
 		ResponseEntity<String> responseEntity = restTemplate.exchange(
-				url.toString(), 
-			    HttpMethod.GET, 
+				url, 
+			    method, 
 			    entity, 
 			    new ParameterizedTypeReference<String>() {
 			    });
@@ -104,25 +125,21 @@ public class Auth0Service {
 	}
 	
 	public HttpEntity<String> newUser(NewUserRequest body) throws JsonProcessingException {
+		
+		body.setConnection(connection);
+		
 		Auth0usersResponse existingUser = this.findUserByEmail(body.getEmail()).getBody();
 		if(existingUser.getTotal() > 0) {
 			throw new DuplicateUserException();
 		}
+		
 		StringBuilder url = new StringBuilder("https://")
 				.append(domain)
 				.append("/api/v2/users");
 		
-		ObjectMapper objectMapper = new ObjectMapper();
 		String bodyString = objectMapper.writeValueAsString(body);
-		HttpEntity<String> entity = getEntityWithHeaders(bodyString);
 		
-		ResponseEntity<String> responseEntity = restTemplate.exchange(
-				url.toString(), 
-			    HttpMethod.POST, 
-			    entity, 
-			    new ParameterizedTypeReference<String>() {
-			    });
-		return responseEntity;
+		return apiExchange( url.toString(), bodyString, HttpMethod.POST);
 	}
 	
 	public HttpEntity<String> login(UserPasswordLogin user) throws JsonProcessingException {
@@ -131,44 +148,43 @@ public class Auth0Service {
 				.append("/oauth/token");
 		
 		ObjectMapper objectMapper = new ObjectMapper();
-		String bodyString = objectMapper.writeValueAsString(user);
-		HttpEntity<String> entity = getEntityWithHeaders(bodyString);
 		
-		ResponseEntity<String> responseEntity = restTemplate.exchange(
-				url.toString(), 
-			    HttpMethod.POST, 
-			    entity, 
-			    new ParameterizedTypeReference<String>() {
-			    });
-		return responseEntity;
+		String bodyString = objectMapper.writeValueAsString(buildLoginRequestBody(user));
+		
+		return apiExchange( url.toString(), bodyString, HttpMethod.POST);
+	}
+
+	private Map<String, Object> buildLoginRequestBody(UserPasswordLogin user){
+		Map<String, Object> body = new HashMap<String,Object>();
+		body.put("client_id", clientId);
+		body.put("client_secret", clientSecret);
+		body.put("audience", audience);
+		body.put("grant_type", "password");
+		body.put("username", user.getUsername());
+		body.put("password", user.getPassword());
+		body.put("connection", connection);
+		return body;
 	}
 	
 	public HttpEntity<String> edit(String userId, @Valid EditUserRequest body) throws JsonProcessingException {
+		
+		
 		HttpClient httpClient = HttpClientBuilder.create().build();
 		restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
 		
 		Auth0usersResponse existingUser = this.findUserById(userId).getBody();
 		if(existingUser.getTotal() == 0) {
 			throw new UserNotFoundException();
-		}
+		}		
 		
 		StringBuilder url = new StringBuilder("https://")
 				.append(domain)
 				.append("/api/v2/users/")
 				.append(userId);
 		
-		ObjectMapper objectMapper = new ObjectMapper();
-		objectMapper.setSerializationInclusion(Include.NON_NULL);
 		String bodyString = objectMapper.writeValueAsString(body);
-		HttpEntity<String> entity = getEntityWithHeaders(bodyString);
 		
-		ResponseEntity<String> responseEntity = restTemplate.exchange(
-				url.toString(), 
-			    HttpMethod.PATCH, 
-			    entity, 
-			    new ParameterizedTypeReference<String>() {
-			    });
-		return responseEntity;
+		return apiExchange( url.toString(), bodyString, HttpMethod.PATCH);
 	}
 	
 	public HttpEntity<String> delete(String userId) throws JsonProcessingException {
@@ -183,15 +199,7 @@ public class Auth0Service {
 				.append("/api/v2/users/")
 				.append(userId);
 		
-		HttpEntity<String> entity = getEntityWithHeaders(null);
-		
-		ResponseEntity<String> responseEntity = restTemplate.exchange(
-				url.toString(), 
-			    HttpMethod.DELETE, 
-			    entity, 
-			    new ParameterizedTypeReference<String>() {
-			    });
-		return responseEntity;
+		return apiExchange( url.toString(), null, HttpMethod.DELETE);
 	}
 
 	
@@ -203,6 +211,57 @@ public class Auth0Service {
 		return  new HttpEntity<>(body, headers);
 	}
 
+	@Override
+	public HttpEntity<String> addPermissions(String userId, PermissionsRequest permissions) throws JsonProcessingException {
+		Auth0usersResponse existingUser = this.findUserById(userId).getBody();
+		if(existingUser.getTotal() == 0) {
+			throw new UserNotFoundException();
+		}
+		
+		StringBuilder url = new StringBuilder("https://")
+				.append(domain)
+				.append("/api/v2/users/")
+				.append(userId)
+				.append("/permissions");
+		
+		String bodyString = objectMapper.writeValueAsString(buildPermissionsBody(permissions));
+		
+		return apiExchange( url.toString(), bodyString, HttpMethod.POST);
+	}
 	
+	@Override
+	public HttpEntity<String> deletePermissions(String userId, PermissionsRequest permissions) throws JsonProcessingException {
+		Auth0usersResponse existingUser = this.findUserById(userId).getBody();
+		if(existingUser.getTotal() == 0) {
+			throw new UserNotFoundException();
+		}
+		
+		StringBuilder url = new StringBuilder("https://")
+				.append(domain)
+				.append("/api/v2/users/")
+				.append(userId)
+				.append("/permissions");
+		
+		String bodyString = objectMapper.writeValueAsString(buildPermissionsBody(permissions));
+		
+		return apiExchange( url.toString(), bodyString, HttpMethod.DELETE);
+	}
+	
+	private Map<String, Object> buildPermissionsBody(PermissionsRequest request){
+		
+		Map<String, Object> body = new HashMap<String, Object>();
+		
+		List<Map<String, Object>> permissions = new ArrayList<Map<String, Object>>();
+		request.getPermissions().forEach( permission -> {
+			Map<String, Object> object = new HashMap<String,Object>();
+			object.put("permission_name", permission);
+			object.put("resource_server_identifier", audience);
+			permissions.add(object);
+		});
+		
+		body.put("permissions", permissions);
+		
+		return body;
+	}
 
 }

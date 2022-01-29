@@ -14,7 +14,7 @@ public class NewUserRequest {
 	String password;
 	String given_name;
 	String family_name;
-	String connection = "Username-Password-Authentication";
+	String connection;
 	
 	public String getEmail() {
 		return email;

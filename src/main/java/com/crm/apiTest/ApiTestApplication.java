@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
 import com.crm.apiTest.config.StorageProperties;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootApplication
 @EnableConfigurationProperties(StorageProperties.class)
@@ -19,6 +21,13 @@ public class ApiTestApplication {
 	@Bean
 	public RestTemplate getRestTemplate(){
 		return new RestTemplate();
+	}
+	
+	@Bean
+	public ObjectMapper getObjectMapper() {
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.setSerializationInclusion(Include.NON_NULL);
+		return objectMapper;
 	}
 
 }

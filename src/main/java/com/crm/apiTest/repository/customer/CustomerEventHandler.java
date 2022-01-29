@@ -1,5 +1,7 @@
 package com.crm.apiTest.repository.customer;
 
+import javax.persistence.NoResultException;
+
 import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
 import org.springframework.data.rest.core.annotation.HandleBeforeSave;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
@@ -15,12 +17,17 @@ public class CustomerEventHandler {
 	    
     @HandleBeforeCreate
     public void handleCustomerBeforeCreate(Customer c){
+    	
+    	if(c.getId() != null) {
+    		throw new NoResultException();
+    	}
+    	
     	audit(c);
     }
     
     @HandleBeforeSave
     public void handleCustomerBeforeSave(Customer c){
-        audit(c);        
+        audit(c);
     }
     
     private void audit( Customer entity) {

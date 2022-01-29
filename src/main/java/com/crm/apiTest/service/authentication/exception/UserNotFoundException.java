@@ -1,4 +1,4 @@
-package com.crm.apiTest.service;
+package com.crm.apiTest.service.authentication.exception;
 
 public class UserNotFoundException extends RuntimeException {
 
