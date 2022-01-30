@@ -1,4 +1,4 @@
-# Food Log Rest API
+# Test Rest API
 
  - Spring boot application, checkout [HELP.md](./HELP.md) for details
 
@@ -6,8 +6,21 @@
 
  - The configuration properties are in src/main/resources/applitation*.yaml files.
  - Setup SPRING.PROFILES.ACTIVE environment variable to "prod" (without quotes) for production environment.
- - Setup nutritionix apikey and appId for nutritionix credentials.
- - For production environment **change foodLog.secretKey value** , is the salt for JWT tokens.
+
+## Auth0 authentication (oauth2)
+ - We're using auth0 provider, to config your account provide followind environment variables;
+   - auth0Audience
+   - auth0Domain
+   - auth0Connection
+   - auth0ManagementToken
+   - auth0ClientId
+   - auth0ClientSecret
+
+## CI/CD
+
+Project setted up to use Travis-ci and Heroku. 
+Use https://brunos-crm-api-test.herokuapp.com/ for live api access
+
 
 ## H2 Database
  
@@ -26,11 +39,6 @@
  - Run `docker build ./ -t apitest` for docker image creation (tag it as you prefer)
  - Start the server: `docker run -p 8080:8080 apitest` 
 
+## Use Postman for full api examples and doc:
 
-
-## Initial DATA
-
- - Default data will be migrated on startup, including 3 users:
-   - user@test.com, with several food entries.
-   - user2@test.com, without food entries.
-   - admin@test.com, with several food entries and admin role.
+https://www.getpostman.com/collections/6c5154528ad6968a2e02
