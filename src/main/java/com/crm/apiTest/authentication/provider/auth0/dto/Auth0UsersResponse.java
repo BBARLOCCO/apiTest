@@ -1,4 +1,4 @@
-package com.crm.apiTest.authentication.auth0.dto;
+package com.crm.apiTest.authentication.provider.auth0.dto;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
-public class Auth0usersResponse extends RepresentationModel<Auth0usersResponse>{
+public class Auth0UsersResponse extends RepresentationModel<Auth0UsersResponse>{
 	
 	Integer start;
 	Integer limit;

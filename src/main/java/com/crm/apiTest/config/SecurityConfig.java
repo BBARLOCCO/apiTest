@@ -19,7 +19,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.web.cors.CorsConfiguration;
 
-import com.crm.apiTest.authentication.auth0.validator.AudienceValidator;
+import com.crm.apiTest.authentication.provider.auth0.validator.AudienceValidator;
 
 import org.springframework.security.oauth2.jwt.*;
 

@@ -1,4 +1,4 @@
-package com.crm.apiTest.authentication.auth0.validator;
+package com.crm.apiTest.authentication.provider.auth0.validator;
 import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.OAuth2ErrorCodes;
 import org.springframework.security.oauth2.core.OAuth2TokenValidator;

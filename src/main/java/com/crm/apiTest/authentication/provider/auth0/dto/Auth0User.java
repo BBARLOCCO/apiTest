@@ -1,4 +1,4 @@
-package com.crm.apiTest.authentication.auth0.dto;
+package com.crm.apiTest.authentication.provider.auth0.dto;
 
 import com.crm.apiTest.authentication.dto.User;
 import com.fasterxml.jackson.annotation.JsonProperty;

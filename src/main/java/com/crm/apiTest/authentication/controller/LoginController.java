@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.crm.apiTest.authentication.auth0.service.Auth0Service;
 import com.crm.apiTest.authentication.dto.LoginRequest;
+import com.crm.apiTest.authentication.provider.auth0.service.Auth0Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 @RestController
