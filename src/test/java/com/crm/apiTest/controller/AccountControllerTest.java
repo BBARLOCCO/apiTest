@@ -14,7 +14,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 
+import com.crm.apiTest.dto.GetUsersResponse;
 import com.crm.apiTest.service.authentication.auth0.Auth0Service;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -27,12 +30,12 @@ public class AccountControllerTest {
 	private Auth0Service service;
 	
 	@Test
-	void shouldReturnListOfUsersFromAuth0WhenGetUsersIsCalled() {
-		ResponseEntity<String> jsonList = ResponseEntity.ok("[list]");
-		when(service.getUsers(null)).thenReturn(jsonList);
+	void shouldReturnListOfUsersFromAuth0WhenGetUsersIsCalled() throws JsonMappingException, JsonProcessingException {
+		GetUsersResponse response = new GetUsersResponse();
+		when(service.getUsers(null)).thenReturn(response);
 		
-		ResponseEntity<String> result = accountController.getUsers(null);
-		assertThat(result).isEqualTo(jsonList);
+		GetUsersResponse result = accountController.getUsers(null).getBody();
+		assertThat(result).isEqualTo(response);
 		
 	}
 	

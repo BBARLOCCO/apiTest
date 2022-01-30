@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.crm.apiTest.dto.Auth0usersResponse;
 import com.crm.apiTest.dto.EditUserRequest;
+import com.crm.apiTest.dto.GetUsersResponse;
 import com.crm.apiTest.dto.NewUserRequest;
 import com.crm.apiTest.dto.PermissionsRequest;
 import com.crm.apiTest.service.authentication.AuthenticationService;
@@ -42,8 +42,8 @@ public class AccountController {
 	
 	@GetMapping
 	@PreAuthorize("hasAuthority('read:users')")
-	public ResponseEntity<Auth0usersResponse> getUsers(@RequestParam("page") Optional<Integer> page) throws JsonMappingException, JsonProcessingException{
-		return ResponseEntity.ok(authService.getUsers(page).getBody());
+	public ResponseEntity<GetUsersResponse> getUsers(@RequestParam("page") Optional<Integer> page) throws JsonMappingException, JsonProcessingException{
+		return ResponseEntity.ok(authService.getUsers(page));
 	}
 	
 	@PostMapping

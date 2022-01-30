@@ -1,7 +1,8 @@
 package com.crm.apiTest.dto;
 
 import java.util.List;
-import java.util.Map;
+
+import org.springframework.hateoas.RepresentationModel;
 
 import com.crm.apiTest.service.authentication.auth0.Auth0User;
 
@@ -10,7 +11,7 @@ import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
-public class Auth0usersResponse {
+public class Auth0usersResponse extends RepresentationModel<Auth0usersResponse>{
 	
 	Integer start;
 	Integer limit;

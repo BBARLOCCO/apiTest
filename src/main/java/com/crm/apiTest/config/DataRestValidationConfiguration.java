@@ -14,9 +14,6 @@ public class DataRestValidationConfiguration implements RepositoryRestConfigurer
 
     @Bean
     @Primary
-    /**
-     * Create a validator to use in bean validation - primary to be able to autowire without qualifier
-     */
     Validator validator() {
         return new LocalValidatorFactoryBean();
     }

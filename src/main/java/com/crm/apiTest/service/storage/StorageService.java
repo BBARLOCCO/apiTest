@@ -1,9 +1,6 @@
 package com.crm.apiTest.service.storage;
 
 import org.springframework.core.io.Resource;
-import org.springframework.web.multipart.MultipartFile;
-
-import com.crm.apiTest.dto.ImageRequest;
 
 import java.nio.file.Path;
 import java.util.stream.Stream;

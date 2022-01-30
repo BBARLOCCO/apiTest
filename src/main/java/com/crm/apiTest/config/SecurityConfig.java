@@ -3,21 +3,13 @@ package com.crm.apiTest.config;
 import java.util.Arrays;
 import java.util.Collections;
 
-import javax.servlet.Filter;
-
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.data.repository.query.SecurityEvaluationContextExtension;
 import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
 import org.springframework.security.oauth2.core.OAuth2TokenValidator;
@@ -27,7 +19,6 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.web.cors.CorsConfiguration;
 
-import com.crm.apiTest.filter.Auth0JwtRequestFilter;
 import com.crm.apiTest.validator.AudienceValidator;
 
 import org.springframework.security.oauth2.jwt.*;
@@ -36,8 +27,6 @@ import org.springframework.security.oauth2.jwt.*;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
-	
-	private final PasswordEncoder passwordEncoder;
 	//private final Auth0JwtRequestFilter jwtRequestFilter;
 	
 	@Value("${auth0.audience}")
@@ -46,24 +35,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	@Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
 	private String issuer;
 	
-	public SecurityConfig(PasswordEncoder passwordEncoder) {
+	public SecurityConfig() {
 		super();
-		this.passwordEncoder = passwordEncoder;
-		//this.jwtRequestFilter = jwtRequestFilter;
 	}
-	
-	/*@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.authenticationProvider(daoAuthenticationProvider());
-	}
-
-	
-	private AuthenticationProvider daoAuthenticationProvider() {
-		DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-		provider.setUserDetailsService(userDetailsService);
-		provider.setPasswordEncoder(passwordEncoder);
-		return provider;
-	}*/
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {

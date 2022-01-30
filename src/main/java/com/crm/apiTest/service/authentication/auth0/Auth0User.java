@@ -1,7 +1,5 @@
 package com.crm.apiTest.service.authentication.auth0;
 
-import java.util.Date;
-
 import com.crm.apiTest.service.authentication.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -18,10 +16,6 @@ public class Auth0User implements User {
 	@JsonProperty("family_name")
 	String familyName;
 
-	@JsonProperty("created_at")
-	Date createdAt;
-	@JsonProperty("updated_at")
-	Date updatedAt;
 	@JsonProperty("user_id")
 	String userId;
 	
@@ -40,15 +34,6 @@ public class Auth0User implements User {
 		return familyName;
 	}
 
-	@Override
-	public Date getCreatedAt() {
-		return createdAt;
-	}
-
-	@Override
-	public Date getUpdatedAt() {
-		return updatedAt;
-	}
 
 	@Override
 	public String getUserId() {
@@ -67,13 +52,7 @@ public class Auth0User implements User {
 		this.familyName = familyName;
 	}
 	
-	public void setCreatedAt(Date createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	public void setUpdatedAt(Date updatedAt) {
-		this.updatedAt = updatedAt;
-	}
+	
 
 	public void setUserId(String userId) {
 		this.userId = userId;

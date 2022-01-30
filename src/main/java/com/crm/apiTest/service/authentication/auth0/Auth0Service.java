@@ -25,6 +25,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.crm.apiTest.dto.Auth0usersResponse;
 import com.crm.apiTest.dto.EditUserRequest;
+import com.crm.apiTest.dto.GetUsersResponse;
 import com.crm.apiTest.dto.NewUserRequest;
 import com.crm.apiTest.dto.PermissionsRequest;
 import com.crm.apiTest.service.authentication.AuthenticationService;
@@ -34,7 +35,6 @@ import com.crm.apiTest.service.authentication.exception.UserNotFoundException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectReader;
 
 
 @Service
@@ -65,9 +65,7 @@ public class Auth0Service implements AuthenticationService{
 	@Autowired
 	private ObjectMapper objectMapper;
 	
-	
-	
-	public ResponseEntity<Auth0usersResponse> getUsers(Optional<Integer> page) throws JsonMappingException, JsonProcessingException {
+	public GetUsersResponse getUsers(Optional<Integer> page) throws JsonMappingException, JsonProcessingException {
 		
 		StringBuilder url = new StringBuilder("https://")
 				.append(domain)
@@ -82,7 +80,13 @@ public class Auth0Service implements AuthenticationService{
 			    entity, 
 			    new ParameterizedTypeReference<Auth0usersResponse>() {
 			    });
-		return responseEntity;
+		
+		GetUsersResponse response = new GetUsersResponse();
+		Auth0usersResponse users = responseEntity.getBody();
+		response.set_embedded( users.getUsers());
+		response.setPage(users.getTotal(), page.orElse(0));
+		
+		return response;
 	}
 	
 	private ResponseEntity<String> apiExchange(String url, String body, HttpMethod method){
