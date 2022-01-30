@@ -12,14 +12,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.ResponseEntity;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import com.crm.apiTest.dto.GetUsersResponse;
 import com.crm.apiTest.service.authentication.auth0.Auth0Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
-
+@SpringBootTest
 @ExtendWith(MockitoExtension.class)
 public class AccountControllerTest {
 
