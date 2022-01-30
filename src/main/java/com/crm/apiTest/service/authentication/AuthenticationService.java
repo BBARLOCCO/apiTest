@@ -10,6 +10,7 @@ import com.crm.apiTest.dto.EditUserRequest;
 import com.crm.apiTest.dto.GetUsersResponse;
 import com.crm.apiTest.dto.NewUserRequest;
 import com.crm.apiTest.dto.PermissionsRequest;
+import com.crm.apiTest.service.authentication.auth0.Auth0User;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
@@ -22,11 +23,11 @@ public interface AuthenticationService {
 		
 		public ResponseEntity<Auth0usersResponse> findUserById(String id);
 		
-		public HttpEntity<String> newUser(NewUserRequest body) throws JsonProcessingException;
+		public HttpEntity<? extends User> newUser(NewUserRequest body) throws JsonProcessingException;
 		
 		public HttpEntity<String> login(UserPasswordLogin user) throws JsonProcessingException;
 		
-		public HttpEntity<String> edit(String userId, EditUserRequest body) throws JsonProcessingException;
+		public ResponseEntity<? extends User> edit(String userId, EditUserRequest body) throws JsonProcessingException;
 		
 		public HttpEntity<String> delete(String userId) throws JsonProcessingException;
 		

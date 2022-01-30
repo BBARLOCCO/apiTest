@@ -29,6 +29,7 @@ import com.crm.apiTest.dto.GetUsersResponse;
 import com.crm.apiTest.dto.NewUserRequest;
 import com.crm.apiTest.dto.PermissionsRequest;
 import com.crm.apiTest.service.authentication.AuthenticationService;
+import com.crm.apiTest.service.authentication.User;
 import com.crm.apiTest.service.authentication.UserPasswordLogin;
 import com.crm.apiTest.service.authentication.exception.DuplicateUserException;
 import com.crm.apiTest.service.authentication.exception.UserNotFoundException;
@@ -89,7 +90,20 @@ public class Auth0Service implements AuthenticationService{
 		return response;
 	}
 	
-	private ResponseEntity<String> apiExchange(String url, String body, HttpMethod method){
+	private ResponseEntity<Auth0User> apiExchange(String url, String body, HttpMethod method){
+		
+		HttpEntity<String> entity = getEntityWithHeaders(body);
+		
+		ResponseEntity<Auth0User> responseEntity = restTemplate.exchange(
+				url, 
+			    method, 
+			    entity, 
+			    new ParameterizedTypeReference<Auth0User>() {
+			    });
+		return responseEntity;
+	}
+	
+private ResponseEntity<String> apiExchangeString(String url, String body, HttpMethod method){
 		
 		HttpEntity<String> entity = getEntityWithHeaders(body);
 		
@@ -138,7 +152,7 @@ public class Auth0Service implements AuthenticationService{
 		return responseEntity;
 	}
 	
-	public HttpEntity<String> newUser(NewUserRequest body) throws JsonProcessingException {
+	public HttpEntity<? extends User> newUser(NewUserRequest body) throws JsonProcessingException {
 		
 		body.setConnection(connection);
 		
@@ -165,7 +179,7 @@ public class Auth0Service implements AuthenticationService{
 		
 		String bodyString = objectMapper.writeValueAsString(buildLoginRequestBody(user));
 		
-		return apiExchange( url.toString(), bodyString, HttpMethod.POST);
+		return apiExchangeString( url.toString(), bodyString, HttpMethod.POST);
 	}
 
 	private Map<String, Object> buildLoginRequestBody(UserPasswordLogin user){
@@ -180,7 +194,7 @@ public class Auth0Service implements AuthenticationService{
 		return body;
 	}
 	
-	public HttpEntity<String> edit(String userId, @Valid EditUserRequest body) throws JsonProcessingException {
+	public ResponseEntity<? extends User> edit(String userId, @Valid EditUserRequest body) throws JsonProcessingException {
 		
 		
 		HttpClient httpClient = HttpClientBuilder.create().build();
@@ -213,7 +227,7 @@ public class Auth0Service implements AuthenticationService{
 				.append("/api/v2/users/")
 				.append(userId);
 		
-		return apiExchange( url.toString(), null, HttpMethod.DELETE);
+		return apiExchangeString( url.toString(), null, HttpMethod.DELETE);
 	}
 
 	
@@ -240,7 +254,7 @@ public class Auth0Service implements AuthenticationService{
 		
 		String bodyString = objectMapper.writeValueAsString(buildPermissionsBody(permissions));
 		
-		return apiExchange( url.toString(), bodyString, HttpMethod.POST);
+		return apiExchangeString( url.toString(), bodyString, HttpMethod.POST);
 	}
 	
 	@Override
@@ -258,7 +272,7 @@ public class Auth0Service implements AuthenticationService{
 		
 		String bodyString = objectMapper.writeValueAsString(buildPermissionsBody(permissions));
 		
-		return apiExchange( url.toString(), bodyString, HttpMethod.DELETE);
+		return apiExchangeString( url.toString(), bodyString, HttpMethod.DELETE);
 	}
 	
 	private Map<String, Object> buildPermissionsBody(PermissionsRequest request){

@@ -24,6 +24,7 @@ import com.crm.apiTest.dto.GetUsersResponse;
 import com.crm.apiTest.dto.NewUserRequest;
 import com.crm.apiTest.dto.PermissionsRequest;
 import com.crm.apiTest.service.authentication.AuthenticationService;
+import com.crm.apiTest.service.authentication.User;
 import com.crm.apiTest.service.authentication.exception.DuplicateUserException;
 import com.crm.apiTest.service.authentication.exception.UserNotFoundException;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -48,20 +49,15 @@ public class AccountController {
 	
 	@PostMapping
 	@PreAuthorize("hasAuthority('write:users')")
-	public ResponseEntity<String> postUser(@Valid @RequestBody NewUserRequest body) throws JsonProcessingException{
-		try {
-			ResponseEntity.status(HttpStatus.CREATED);
-			return ResponseEntity.ok(authService.newUser(body).getBody());
-		}catch(DuplicateUserException e) {
-			
-			return ResponseEntity.internalServerError().body("{\"message\":\"There's already an user with that email\"}");
-		}
+	public ResponseEntity<? extends User> postUser(@Valid @RequestBody NewUserRequest body) throws JsonProcessingException{
+		ResponseEntity.status(HttpStatus.CREATED);
+		return ResponseEntity.ok(authService.newUser(body).getBody());
 		
 	}
 	
 	@PutMapping("{id}")
 	@PreAuthorize("hasAuthority('write:users')")
-	public ResponseEntity<String> edit(@PathVariable("id") String id, @Valid @RequestBody EditUserRequest body) throws JsonProcessingException{
+	public ResponseEntity<? extends User> edit(@PathVariable("id") String id, @Valid @RequestBody EditUserRequest body) throws JsonProcessingException{
 		try {
 			return ResponseEntity.ok(authService.edit(id, body).getBody());
 		}catch(UserNotFoundException e) {			
