@@ -20,8 +20,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import com.crm.apiTest.model.Customer;
-import com.crm.apiTest.repository.customer.CustomerRepository;
+import com.crm.apiTest.customer.model.Customer;
+import com.crm.apiTest.customer.repository.CustomerRepository;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest

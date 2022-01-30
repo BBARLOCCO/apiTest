@@ -14,8 +14,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.crm.apiTest.dto.GetUsersResponse;
-import com.crm.apiTest.service.authentication.auth0.Auth0Service;
+import com.crm.apiTest.authentication.auth0.service.Auth0Service;
+import com.crm.apiTest.authentication.controller.AccountController;
+import com.crm.apiTest.authentication.dto.GetUsersResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
